@@ -17,6 +17,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # RUN locale-gen en_US.UTF-8
 RUN echo root:. | chpasswd
 
+RUN echo '[ -x /vms/setEnv.sh ] && . /vms/setEnv.sh ' >>/root/.bashrc
+
 # daum apt repository
 RUN cp /etc/apt/sources.list /etc/apt/sources.list.BEFORE && sed -i s/kr.archive.ubuntu.com/ftp.daumkakao.com/ /etc/apt/sources.list && sed -i s/archive.ubuntu.com/ftp.daumkakao.com/ /etc/apt/sources.list && apt-get update && rm -rf /var/lib/apt/lists/*
 
