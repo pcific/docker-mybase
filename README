@@ -1,0 +1,5 @@
+docker my ubuntu base image
+
+docker run --rm -d --name mybase-dok  --hostname mybase -v `pwd`:/vms  pcific/mybase
+docker run --rm -it --hostname mybase -v `pwd`:/vms  pcific/mybase bash
+

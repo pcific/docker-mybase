@@ -5,10 +5,11 @@ MAINTAINER pcific@gtplus.co.kr
 ENV DEBIAN_FRONTEND noninteractive
 
 # install common dependencies
-RUN apt-get update && apt-get install -y \
+RUN apt-get update && apt-get install -y --no-install-recommends \
     lsb-release openssh-server sudo \
     curl wget \
-    figlet vim git net-tools netcat iputils-ping
+    figlet vim git net-tools netcat iputils-ping && \
+    rm -rf /var/lib/apt/lists/* 
 
 # build-essential openjdk
 
@@ -17,7 +18,7 @@ RUN apt-get update && apt-get install -y \
 RUN echo root:. | chpasswd
 
 # daum apt repository
-RUN cp /etc/apt/sources.list /etc/apt/sources.list.BEFORE && sed -i s/kr.archive.ubuntu.com/ftp.daumkakao.com/ /etc/apt/sources.list && sed -i s/archive.ubuntu.com/ftp.daumkakao.com/ /etc/apt/sources.list && apt-get update
+RUN cp /etc/apt/sources.list /etc/apt/sources.list.BEFORE && sed -i s/kr.archive.ubuntu.com/ftp.daumkakao.com/ /etc/apt/sources.list && sed -i s/archive.ubuntu.com/ftp.daumkakao.com/ /etc/apt/sources.list && apt-get update && rm -rf /var/lib/apt/lists/*
 
 # setup the vagrant user
 RUN if ! getent passwd vagrant; then useradd -d /home/vagrant -m -s /bin/bash vagrant; fi \
@@ -41,6 +42,8 @@ RUN rm /etc/apt/apt.conf.d/docker-clean
 
 # create the privilege separation directory for sshd
 RUN mkdir -p /run/sshd
+
+VOLUME /vms
 
 # run sshd in the foreground
 CMD /usr/sbin/sshd -D \
